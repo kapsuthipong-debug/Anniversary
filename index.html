@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise Anniversary</title>
+    <style>
+        body {
+            background-color: #fff0f3;
+            font-family: 'Prompt', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 182, 193, 0.4);
+            text-align: center;
+            width: 320px;
+        }
+        h2 {
+            color: #d81b60;
+            margin-bottom: 10px;
+        }
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .dot {
+            width: 15px;
+            height: 15px;
+            border: 2px solid #f48fb1;
+            border-radius: 50%;
+            background: transparent;
+            transition: 0.3s;
+        }
+        .dot.active {
+            background: #d81b60;
+            border-color: #d81b60;
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .key {
+            background: #ffe4e1;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            color: #ad1457;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .key:hover {
+            background: #f48fb1;
+            color: white;
+        }
+        .error-msg {
+            color: #e91e63;
+            font-size: 14px;
+            margin-top: 10px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="lockScreen">
+        <h2>ใส่รหัสเพื่อไปต่อ 💖</h2>
+        <p style="font-size: 13px; color: #888;">รหัส 6 หลัก ทายซิคืออะไรน้า</p>
+        
+        <div class="pin-dots">
+            <div class="dot" id="dot-0"></div>
+            <div class="dot" id="dot-1"></div>
+            <div class="dot" id="dot-2"></div>
+            <div class="dot" id="dot-3"></div>
+            <div class="dot" id="dot-4"></div>
+            <div class="dot" id="dot-5"></div>
+        </div>
+
+        <div class="keypad">
+            <button class="key" onclick="pressNum(1)">1</button>
+            <button class="key" onclick="pressNum(2)">2</button>
+            <button class="key" onclick="pressNum(3)">3</button>
+            <button class="key" onclick="pressNum(4)">4</button>
+            <button class="key" onclick="pressNum(5)">5</button>
+            <button class="key" onclick="pressNum(6)">6</button>
+            <button class="key" onclick="pressNum(7)">7</button>
+            <button class="key" onclick="pressNum(8)">8</button>
+            <button class="key" onclick="pressNum(9)">9</button>
+            <button class="key" style="visibility: hidden;"></button>
+            <button class="key" onclick="pressNum(0)">0</button>
+            <button class="key" onclick="clearPin()">⌫</button>
+        </div>
+        <div class="error-msg" id="errorMsg"></div>
+    </div>
+
+    <div id="mainContent" style="display: none; text-align: center;">
+        <h1 style="color: #d81b60;">ยินดีด้วย! คุณเปิดกล่องความทรงจำสำเร็จแล้ว 🎉</h1>
+        <p>สามารถใส่เนื้อหา ไทม์ไลน์รูปภาพ หรือลิงก์หน้าถัดไปต่อตรงนี้ได้เลยครับ</p>
+    </div>
+
+    <script>
+        const correctPin = "160725"; // เปลี่ยนเป็นรหัส 6 หลักของคุณตรงนี้
+        let currentPin = "";
+
+        function pressNum(num) {
+            if (currentPin.length < 6) {
+                currentPin += num;
+                updateDots();
+                
+                if (currentPin.length === 6) {
+                    checkPin();
+                }
+            }
+        }
+
+        function clearPin() {
+            currentPin = currentPin.slice(0, -1);
+            updateDots();
+            document.getElementById("errorMsg").innerText = "";
+        }
+
+        function updateDots() {
+            for (let i = 0; i < 6; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (i < currentPin.length) {
+                    dot.classList.add("active");
+                } else {
+                    dot.classList.remove("active");
+                }
+            }
+        }
+
+        function checkPin() {
+            if (currentPin === correctPin) {
+                setTimeout(() => {
+                    document.getElementById("lockScreen").style.display = "none";
+                    document.getElementById("mainContent").style.display = "block";
+                }, 300);
+            } else {
+                document.getElementById("errorMsg").innerText = "รหัสผ่านไม่ถูกต้อง ลองใหม่อีกครั้ง! 🥺";
+                setTimeout(() => {
+                    currentPin = "";
+                    updateDots();
+                }, 800);
+            }
+        }
+    </script>
+</body>
+</html>
